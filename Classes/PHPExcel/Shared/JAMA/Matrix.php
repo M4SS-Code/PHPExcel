@@ -722,9 +722,15 @@ class PHPExcel_Shared_JAMA_Matrix
                 for ($j = 0; $j < $this->n; ++$j) {
                     $validValues = true;
                     $value = $M->get($i, $j);
-                    if ((is_string($this->A[$i][$j])) && (strlen($this->A[$i][$j]) > 0) && (!is_numeric($this->A[$i][$j]))) {
-                        $this->A[$i][$j] = trim($this->A[$i][$j], '"');
-                        $validValues &= PHPExcel_Shared_String::convertToNumberIfFraction($this->A[$i][$j]);
+                    if ((is_string($this->A[$i][$j])) && (!is_numeric($this->A[$i][$j]))) {
+                        if(strlen($this->A[$i][$j]) > 0) {
+                            $this->A[$i][$j] = trim($this->A[$i][$j], '"');
+                            $validValues &= PHPExcel_Shared_String::convertToNumberIfFraction($this->A[$i][$j]);
+                        } else {
+                            // WORKAROUND TO AVOID: A non-numeric value encountered
+                            $this->A[$i][$j] = 0;
+                            // WORKAROUND TO AVOID: A non-numeric value encountered
+                        }
                     }
                     if ((is_string($value)) && (strlen($value) > 0) && (!is_numeric($value))) {
                         $value = trim($value, '"');
